@@ -18,12 +18,12 @@ public class Main {
         BufferedReader lecturaBuffer = null;
         PrintWriter escritura = null;
         String linea;
-        if (origen.exists()) {
+        if (origen.exists() && destino.exists()) {
             try {
                 ficheroLectura = new FileReader(origen);
                 lecturaBuffer = new BufferedReader(ficheroLectura);
                 ficheroEscritura = new FileWriter(destino);
-                escritura = new PrintWriter(ficheroEscritura);
+                escritura = new PrintWriter(ficheroEscritura);//todo PORQ NO BUFFERED WRITTER
                 while ((linea = lecturaBuffer.readLine()) != null) {
                     escritura.println(linea);
                 }
@@ -34,9 +34,12 @@ public class Main {
                 // En el finally cerramos el fichero, para asegurarnos
                 // que se cierra tanto si t0d0 va bien como si salta
                 // una excepcion.
+                //ORDEN DE CIERRE: PRIMERO DE LAS HIJA Y DESPUES LA PADRE
                 try {
                     if (null != ficheroLectura && null != ficheroEscritura) {
+                        lecturaBuffer.close();
                         ficheroLectura.close();
+                        escritura.close();
                         ficheroEscritura.close();
                     }
                 } catch (Exception e2) {

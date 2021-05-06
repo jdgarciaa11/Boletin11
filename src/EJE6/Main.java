@@ -15,19 +15,18 @@ public class Main {
 
     private static void estadisticaFichero(String path) {
         File fichero = new File(path);
-        FileReader ficheroLectura = null;
         BufferedReader lecturaBuffer = null;
         int numeroPalabras = 0, numeroParrafos = 1, numeroCaracteres = 0;
         double mediaCaracteresPalabra, mediaPalabrasParrafo;
         String linea;
-        if (fichero.exists()) {
+        if (!fichero.isDirectory()) {
             try {
                 // Apertura del fichero y creacion de BufferedReader para poder
                 // hacer una lectura comoda (disponer del metodo readLine()).
-                ficheroLectura = new FileReader(fichero);
-                lecturaBuffer = new BufferedReader(ficheroLectura);
-                while ((linea = lecturaBuffer.readLine()) != null) {
-                    if (linea.equals("")) {
+                lecturaBuffer = new BufferedReader(new FileReader(fichero));
+                linea = lecturaBuffer.readLine();
+                while (linea != null) {
+                    if (linea.equals("")) {//linea.length()==0)
                         numeroParrafos++;
                     } else {
                         for (int i = 0; i < linea.length(); i++) {
@@ -45,12 +44,15 @@ public class Main {
                 // En el finally cerramos el fichero, para asegurarnos
                 // que se cierra tanto si t0d0 va bien como si salta
                 // una excepcion.
-                try {
-                    if (null != ficheroLectura) {
-                        ficheroLectura.close();
+                //CERRAMOS T0D0 LO QUE HAYAMOS ABIERTO
+                if (lecturaBuffer != null) {
+                    try {
+                        if (lecturaBuffer != null) {//TODO cerrar buffered o reader? , cuando se cierra reader se cierra buffer?
+                            lecturaBuffer.close();
+                        }
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
                     }
-                } catch (Exception e2) {
-                    e2.printStackTrace();
                 }
             }
         }
